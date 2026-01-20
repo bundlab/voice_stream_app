@@ -173,11 +173,39 @@ def parse_args(argv=None):
     parser = argparse.ArgumentParser(description="Voice stream demo: print text and speak it locally using pyttsx3.")
     parser.add_argument("--lines-file", help="Path to a text file with one line per utterance (overrides built-in lines)")
     parser.add_argument("--continuous", action="store_true", help="Loop continuously over the provided lines")
-    parser.add_argument("--rate", type=int, default=150, help="Speech rate for TTS (words per minute)")
-    parser.add_argument("--volume", type=float, default=1.0, help="TTS volume (0.0..1.0)")
-    parser.add_argument("--print-interval", type=float, default=0.5, help="Seconds between printed lines")
-    parser.add_argument("--save", metavar="OUTPUT", help="Synthesize lines to a file (e.g., output.mp3 or output.wav) and exit")
-    parser.add_argument("--run-once", dest="run_once", action="store_true", help="Print and speak the lines once and exit (overrides --continuous)")
+    parser.add_argument(
+        "--rate", 
+        type=int, 
+        default=150, 
+        help="Speech rate for TTS (words per minute)"
+    )
+    
+    parser.add_argument(
+        "--volume", 
+        type=float, 
+        default=1.0, 
+        help="TTS volume (0.0..1.0)"
+    )
+    
+    parser.add_argument(
+        "--print-interval", 
+        type=float, 
+        default=0.5, 
+        help="Seconds between printed lines"
+    )
+    
+    parser.add_argument(
+        "--save", 
+        metavar="OUTPUT", 
+        help="Synthesize lines to a file (e.g., output.mp3 or output.wav) and exit"
+    )
+    
+    parser.add_argument(
+        "--run-once", 
+        dest="run_once", 
+        action="store_true", 
+        help="Print and speak the lines once and exit (overrides --continuous)"
+    )
     return parser.parse_args(argv)
 
 def main(argv=None):
