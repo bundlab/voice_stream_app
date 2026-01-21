@@ -1,4 +1,4 @@
-import pytest
+#import pytest
 from app import print_worker
 
 
@@ -14,7 +14,12 @@ def test_print_worker_enqueue_lines():
     # Here you'd typically use threading to test concurrently.
 
     # Simulate call to the print_worker function.
-    print_worker(lines, msg_queue, stop_event, print_interval=0, enqueue_for_tts=True, run_once=False)
+    print_worker(
+        lines, msg_queue, 
+        stop_event, 
+        print_interval=0, 
+        enqueue_for_tts=True, 
+        run_once=False)
 
     # Check that all lines were enqueued.
     for line in lines:

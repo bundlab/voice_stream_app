@@ -19,10 +19,15 @@ DEFAULT_LINES = [
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 
-def tts_worker(msg_queue: queue.Queue, stop_event: threading.Event, rate: int = 150, volume: float = 1.0):
-    """TTS worker that initializes the pyttsx3 engine inside the thread and speaks queued messages.
+def tts_worker(
+    msg_queue: queue.Queue, stop_event: 
+        threading.Event, rate: int = 150, 
+        volume: float = 1.0):
+    """TTS worker that initializes the pyttsx3 engine inside 
+    the thread and speaks queued messages.
 
-    This avoids sharing the engine across threads and keeps runAndWait blocking only inside this thread.
+    This avoids sharing the engine across threads and keeps 
+    runAndWait blocking only inside this thread.
     """
     try:
         import pyttsx3
@@ -64,7 +69,11 @@ def tts_worker(msg_queue: queue.Queue, stop_event: threading.Event, rate: int = 
             pass
         logging.info("TTS worker exiting")
 
-def print_worker(lines, msg_queue: queue.Queue, stop_event: threading.Event, print_interval: float = 0.5, enqueue_for_tts: bool = True, run_once: bool = False):
+def print_worker(lines, msg_queue: 
+    queue.Queue, stop_event: 
+        threading.Event, print_interval: 
+            float = 0.5, enqueue_for_tts: 
+                bool = True, run_once: bool = False):
     """Printer worker that prints lines and optionally enqueues them for TTS.
 
     Args:
@@ -96,8 +105,13 @@ def print_worker(lines, msg_queue: queue.Queue, stop_event: threading.Event, pri
     finally:
         logging.info("Printer worker exiting")
 
-def synthesize_to_file(lines, output_path: str, rate: int = 150, volume: float = 1.0):
-    """Synthesize the provided lines to a file using pyttsx3.save_to_file and runAndWait.
+def synthesize_to_file(
+    lines, output_path: 
+        str, rate: 
+            int = 150, volume: 
+                float = 1.0):
+    """Synthesize the provided lines to a 
+    file using pyttsx3.save_to_file and runAndWait.
     """
     try:
         import pyttsx3
@@ -116,7 +130,10 @@ def synthesize_to_file(lines, output_path: str, rate: int = 150, volume: float =
     engine.runAndWait()
     logging.info("Finished saving %s", output_path)
 
-def run(lines=None, *, continuous=False, rate=150, volume=1.0, print_interval=0.5):
+def run(
+    lines=None, *, continuous=False, 
+        rate=150, volume=1.0, 
+        print_interval=0.5):
     """Run the printer + TTS workers until interrupted.
 
     Returns after graceful shutdown.
@@ -139,16 +156,30 @@ def run(lines=None, *, continuous=False, rate=150, volume=1.0, print_interval=0.
     signal.signal(signal.SIGINT, handle_signal)
     signal.signal(signal.SIGTERM, handle_signal)
 
-    tts_thread = threading.Thread(target=tts_worker, args=(msg_queue, stop_event, rate, volume), daemon=True)
+    tts_thread = threading.Thread(
+        target=tts_worker, 
+        args=(msg_queue, 
+              stop_event, 
+              rate, volume), 
+        daemon=True
+    )
+    
     printer_thread = threading.Thread(
-        target=print_worker, args=(lines, msg_queue, stop_event, print_interval, True, not continuous), daemon=True
+        target=print_worker, args=(
+            lines, msg_queue, 
+            stop_event, print_interval, 
+            True, not continuous
+            ), 
+        daemon=True
     )
 
     tts_thread.start()
     printer_thread.start()
 
     try:
-        while (tts_thread.is_alive() or printer_thread.is_alive()) and not stop_event.is_set():
+        while (
+            tts_thread.is_alive() or 
+            printer_thread.is_alive()) and not stop_event.is_set():
             time.sleep(0.2)
     except KeyboardInterrupt:
         logging.info("KeyboardInterrupt, initiating shutdown")
@@ -167,12 +198,18 @@ def _read_lines_from_file(path: str):
     p = Path(path)
     if not p.exists():
         raise FileNotFoundError(path)
-    return [l.rstrip("\n\r") for l in p.read_text(encoding="utf-8").splitlines() if l.strip()]
+    return [l.rstrip("\n\r") for l in p.read_text(
+        encoding="utf-8").splitlines() if l.strip()]
 
 def parse_args(argv=None):
-    parser = argparse.ArgumentParser(description="Voice stream demo: print text and speak it locally using pyttsx3.")
-    parser.add_argument("--lines-file", help="Path to a text file with one line per utterance (overrides built-in lines)")
-    parser.add_argument("--continuous", action="store_true", help="Loop continuously over the provided lines")
+    parser = argparse.ArgumentParser(
+        description="Voice stream demo: print text and speak it locally using pyttsx3.")
+    parser.add_argument(
+        "--lines-file", 
+        help="Path to a text file with one line per utterance (overrides built-in lines)")
+    parser.add_argument(
+        "--continuous", action="store_true", 
+        help="Loop continuously over the provided lines")
     parser.add_argument(
         "--rate", 
         type=int, 
@@ -222,7 +259,11 @@ def main(argv=None):
 
     # run_once flag means not continuous
     continuous = bool(args.continuous) and not args.run_once
-    run(lines, continuous=continuous, rate=args.rate, volume=args.volume, print_interval=args.print_interval)
+    run(
+        lines, continuous=continuous, 
+        rate=args.rate, volume=args.volume, 
+        print_interval=args.print_interval
+    )
 
 
 if __name__ == "__main__":
