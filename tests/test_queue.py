@@ -1,11 +1,12 @@
 # import pytest
 import os
 import sys
+from app import print_worker
 
 # Ensure project root is on sys.path for test discovery/imports
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-
-from app import print_worker
+sys.path.insert(0,
+                os.path.abspath(os.path.join(os.path.dirname(__file__),
+                                             "..")))
 
 
 def test_print_worker_enqueue_lines():
