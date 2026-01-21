@@ -173,7 +173,14 @@ def run(lines=None, *, continuous=False, rate=150, volume=1.0, print_interval=0.
 
     printer_thread = threading.Thread(
         target=print_worker,
-        args=(lines, msg_queue, stop_event, print_interval, True, not continuous),
+        args=(
+            lines,
+            msg_queue,
+            stop_event,
+            print_interval,
+            True,
+            not continuous,
+        ),
         daemon=True,
     )
 
@@ -181,7 +188,10 @@ def run(lines=None, *, continuous=False, rate=150, volume=1.0, print_interval=0.
     printer_thread.start()
 
     try:
-        while (tts_thread.is_alive() or printer_thread.is_alive()) and not stop_event.is_set():
+        while (
+            (tts_thread.is_alive() or printer_thread.is_alive())
+            and not stop_event.is_set()
+        ):
             time.sleep(0.2)
     except KeyboardInterrupt:
         logging.info("KeyboardInterrupt, initiating shutdown")
@@ -222,7 +232,9 @@ def parse_args(argv=None):
         ),
     )
     parser.add_argument(
-        "--continuous", action="store_true", help="Loop continuously over the provided lines"
+        "--continuous",
+        action="store_true",
+        help="Loop continuously over the provided lines",
     )
     parser.add_argument(
         "--rate",
@@ -277,7 +289,11 @@ def main(argv=None):
     # run_once flag means not continuous
     continuous = bool(args.continuous) and not args.run_once
     run(
-        lines, continuous=continuous, rate=args.rate, volume=args.volume, print_interval=args.print_interval
+        lines,
+        continuous=continuous,
+        rate=args.rate,
+        volume=args.volume,
+        print_interval=args.print_interval,
     )
 
 
