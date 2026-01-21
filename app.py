@@ -144,7 +144,12 @@ def synthesize_to_file(
     logging.info("Finished saving %s", output_path)
 
 
-def run(lines=None, *, continuous=False, rate=150, volume=1.0, print_interval=0.5):
+def run(lines=None,
+        *,
+        continuous=False,
+        rate=150,
+        volume=1.0,
+        print_interval=0.5):
     """Run the printer + TTS workers until interrupted.
 
     Returns after graceful shutdown.
@@ -168,7 +173,12 @@ def run(lines=None, *, continuous=False, rate=150, volume=1.0, print_interval=0.
     signal.signal(signal.SIGTERM, handle_signal)
 
     tts_thread = threading.Thread(
-        target=tts_worker, args=(msg_queue, stop_event, rate, volume), daemon=True
+        target=tts_worker,
+        args=(msg_queue,
+              stop_event,
+              rate,
+              volume),
+        daemon=True
     )
 
     printer_thread = threading.Thread(
@@ -244,7 +254,10 @@ def parse_args(argv=None):
     )
 
     parser.add_argument(
-        "--volume", type=float, default=1.0, help="TTS volume (0.0..1.0)"
+        "--volume",
+        type=float,
+        default=1.0,
+        help="TTS volume (0.0..1.0)"
     )
 
     parser.add_argument(
@@ -283,7 +296,10 @@ def main(argv=None):
         lines = DEFAULT_LINES
 
     if args.save:
-        synthesize_to_file(lines, args.save, rate=args.rate, volume=args.volume)
+        synthesize_to_file(lines,
+                           args.save,
+                           rate=args.rate,
+                           volume=args.volume)
         return
 
     # run_once flag means not continuous
